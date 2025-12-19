@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer">
+    <title>DinoOS-DesktopInterface</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            overflow: hidden;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        #desktop {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            background-size: cover;
+            background-position: center;
+            transition: background-image 0.5s ease-in-out;
+            background-image: url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&q=80&w=1920');
+        }
+
+        .window {
+            position: absolute;
+            min-width: 300px;
+            min-height: 200px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            z-index: 10;
+        }
+
+        .window-header {
+            background: #f3f4f6;
+            padding: 8px 12px;
+            cursor: move;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #e5e7eb;
+            user-select: none;
+        }
+
+        .window-content {
+            flex-grow: 1;
+            background: white;
+            position: relative;
+        }
+
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .taskbar {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 48px;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            display: flex;
+            align-items: center;
+            padding: 0 10px;
+            z-index: 1000;
+            border-top: 1px solid rgba(255,255,255,0.4);
+        }
+
+        .start-menu {
+            position: absolute;
+            bottom: 55px;
+            left: 10px;
+            width: 320px;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(25px);
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.25);
+            padding: 20px;
+            display: none;
+            z-index: 2000;
+        }
+
+        .desktop-icon {
+            width: 80px;
+            height: 95px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 10px;
+            cursor: pointer;
+            border-radius: 10px;
+            color: white;
+            text-shadow: 1px 1px 4px rgba(0,0,0,1);
+            transition: all 0.2s;
+        }
+
+        .desktop-icon:hover {
+            background: rgba(255,255,255,0.2);
+            transform: scale(1.05);
+        }
+
+        .desktop-icon i {
+            font-size: 2.8rem;
+            margin-bottom: 8px;
+        }
+
+        .hidden-window {
+            display: none !important;
+        }
+
+        .active-window {
+            z-index: 100 !important;
+        }
+    </style>
+</head>
+<body>
+
+<div id="desktop">
+    <!-- Desktop Icons -->
+    <div class="flex flex-col flex-wrap h-full p-6 content-start">
+        <div class="desktop-icon" onclick="openWindow('win-google', 'https://www.google.com/search?igu=1')">
+            <i class="fab fa-google text-blue-400"></i>
+            <span class="text-xs font-bold">Google</span>
+        </div>
+        <div class="desktop-icon" onclick="openWindow('win-wikipedia', 'https://id.m.wikipedia.org')">
+            <i class="fab fa-wikipedia-w text-white"></i>
+            <span class="text-xs font-bold">Wikipedia</span>
+        </div>
+        <div class="desktop-icon" onclick="openWindow('win-bing', 'https://www.bing.com')">
+            <i class="fas fa-search text-green-400"></i>
+            <span class="text-xs font-bold">Bing</span>
+        </div>
+        <div class="desktop-icon" onclick="openWindow('win-youtube', 'https://www.youtube.com/embed?listType=search&list=music')">
+            <i class="fab fa-youtube text-red-500"></i>
+            <span class="text-xs font-bold">YouTube</span>
+        </div>
+    </div>
+
+    <!-- Windows Container -->
+    <div id="windows-container">
+        <!-- Google Window -->
+        <div id="win-google" class="window hidden-window" style="width: 850px; height: 550px; top: 40px; left: 120px;">
+            <div class="window-header">
+                <div class="flex items-center gap-2">
+                    <i class="fab fa-google text-blue-500"></i>
+                    <span class="text-sm font-semibold">Private Google Search</span>
+                </div>
+                <div class="flex gap-2">
+                    <button onclick="closeWindow('win-google')" class="w-7 h-7 hover:bg-red-500 hover:text-white rounded-full flex items-center justify-center transition">
+                        <i class="fas fa-times text-xs"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="window-content">
+                <iframe id="iframe-win-google" sandbox="allow-scripts allow-forms allow-same-origin" referrerpolicy="no-referrer"></iframe>
+            </div>
+        </div>
+
+        <!-- Wikipedia Window -->
+        <div id="win-wikipedia" class="window hidden-window" style="width: 850px; height: 550px; top: 70px; left: 150px;">
+            <div class="window-header">
+                <div class="flex items-center gap-2">
+                    <i class="fab fa-wikipedia-w"></i>
+                    <span class="text-sm font-semibold">Wikipedia</span>
+                </div>
+                <div class="flex gap-2">
+                    <button onclick="closeWindow('win-wikipedia')" class="w-7 h-7 hover:bg-red-500 hover:text-white rounded-full flex items-center justify-center transition">
+                        <i class="fas fa-times text-xs"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="window-content">
+                <iframe id="iframe-win-wikipedia" sandbox="allow-scripts allow-forms allow-same-origin" referrerpolicy="no-referrer"></iframe>
+            </div>
+        </div>
+
+        <!-- Bing Window -->
+        <div id="win-bing" class="window hidden-window" style="width: 850px; height: 550px; top: 100px; left: 180px;">
+            <div class="window-header">
+                <div class="flex items-center gap-2">
+                    <i class="fas fa-search text-green-500"></i>
+                    <span class="text-sm font-semibold">Bing Search</span>
+                </div>
+                <div class="flex gap-2">
+                    <button onclick="closeWindow('win-bing')" class="w-7 h-7 hover:bg-red-500 hover:text-white rounded-full flex items-center justify-center transition">
+                        <i class="fas fa-times text-xs"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="window-content">
+                <iframe id="iframe-win-bing" sandbox="allow-scripts allow-forms allow-same-origin" referrerpolicy="no-referrer"></iframe>
+            </div>
+        </div>
+
+        <!-- YouTube Window -->
+        <div id="win-youtube" class="window hidden-window" style="width: 850px; height: 550px; top: 130px; left: 210px;">
+            <div class="window-header">
+                <div class="flex items-center gap-2">
+                    <i class="fab fa-youtube text-red-600"></i>
+                    <span class="text-sm font-semibold">YouTube Player</span>
+                </div>
+                <div class="flex gap-2">
+                    <button onclick="closeWindow('win-youtube')" class="w-7 h-7 hover:bg-red-500 hover:text-white rounded-full flex items-center justify-center transition">
+                        <i class="fas fa-times text-xs"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="window-content">
+                <iframe id="iframe-win-youtube" sandbox="allow-scripts allow-forms allow-same-origin allow-presentation" referrerpolicy="no-referrer"></iframe>
+            </div>
+        </div>
+    </div>
+
+    <!-- Start Menu -->
+    <div id="startMenu" class="start-menu">
+        <div class="flex items-center gap-3 mb-6 border-b pb-3">
+            <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center text-white">
+                <i class="fas fa-user"></i>
+            </div>
+            <span class="font-bold text-gray-800">Administrator</span>
+        </div>
+        
+        <div class="space-y-4">
+            <p class="text-xs font-bold text-gray-400 uppercase tracking-wider">Kustomisasi Latar</p>
+            <div class="grid grid-cols-3 gap-2">
+                <img src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&q=80&w=200" class="cursor-pointer rounded-lg border-2 border-transparent hover:border-blue-500 h-14 w-full object-cover transition" onclick="setWallpaper(this.src)">
+                <img src="https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&q=80&w=200" class="cursor-pointer rounded-lg border-2 border-transparent hover:border-blue-500 h-14 w-full object-cover transition" onclick="setWallpaper(this.src)">
+                <img src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&q=80&w=200" class="cursor-pointer rounded-lg border-2 border-transparent hover:border-blue-500 h-14 w-full object-cover transition" onclick="setWallpaper(this.src)">
+            </div>
+            <div class="mt-6 pt-4 border-t border-gray-100 flex justify-end">
+                <button onclick="toggleStartMenu()" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg text-sm font-semibold transition">Tutup</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Taskbar -->
+    <div class="taskbar">
+        <button onclick="toggleStartMenu()" class="w-10 h-10 flex items-center justify-center hover:bg-blue-100 rounded-lg mr-4 transition group">
+            <i class="fab fa-windows text-blue-600 text-xl group-hover:scale-110 transition"></i>
+        </button>
+        
+        <div id="taskbar-apps" class="flex gap-2 flex-grow">
+            <!-- App activity indicators could go here -->
+        </div>
+
+        <div class="flex flex-col items-end text-xs font-bold text-gray-600 px-4 border-l border-gray-300 ml-2">
+            <div id="clock">00:00:00</div>
+            <div id="date" class="text-[10px] text-gray-400">...</div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Window Management
+    function openWindow(id, url) {
+        const win = document.getElementById(id);
+        const iframe = document.getElementById('iframe-' + id);
+        
+        // Only load URL if iframe is empty to prevent history stack buildup in the host
+        if (!iframe.src || iframe.src === 'about:blank') {
+            iframe.src = url;
+        }
+        
+        win.classList.remove('hidden-window');
+        focusWindow(id);
+    }
+
+    function closeWindow(id) {
+        const win = document.getElementById(id);
+        const iframe = document.getElementById('iframe-' + id);
+        
+        // Clear iframe source on close to stop tracking and clear memory
+        iframe.src = 'about:blank';
+        win.classList.add('hidden-window');
+    }
+
+    function focusWindow(id) {
+        document.querySelectorAll('.window').forEach(w => w.classList.remove('active-window'));
+        document.getElementById(id).classList.add('active-window');
+    }
+
+    // Draggable Logic
+    document.querySelectorAll('.window').forEach(win => {
+        const header = win.querySelector('.window-header');
+        let isDragging = false;
+        let offset = { x: 0, y: 0 };
+
+        header.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            focusWindow(win.id);
+            offset.x = e.clientX - win.offsetLeft;
+            offset.y = e.clientY - win.offsetTop;
+            win.style.transition = 'none';
+            
+            // Add transparent overlay over iframe while dragging to prevent mouse events loss
+            const overlay = document.createElement('div');
+            overlay.id = 'drag-overlay';
+            overlay.style.position = 'absolute';
+            overlay.style.top = '0';
+            overlay.style.left = '0';
+            overlay.style.width = '100%';
+            overlay.style.height = '100%';
+            overlay.style.zIndex = '1000';
+            win.querySelector('.window-content').appendChild(overlay);
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            win.style.left = (e.clientX - offset.x) + 'px';
+            win.style.top = (e.clientY - offset.y) + 'px';
+        });
+
+        document.addEventListener('mouseup', () => {
+            isDragging = false;
+            const overlay = document.getElementById('drag-overlay');
+            if (overlay) overlay.remove();
+        });
+    });
+
+    // Start Menu
+    function toggleStartMenu() {
+        const menu = document.getElementById('startMenu');
+        menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';
+    }
+
+    // Wallpaper
+    function setWallpaper(url) {
+        const highResUrl = url.split('&w=200')[0] + '&w=1920';
+        document.getElementById('desktop').style.backgroundImage = `url('${highResUrl}')`;
+    }
+
+    // Clock and Date
+    function updateDateTime() {
+        const now = new Date();
+        const timeStr = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        const dateStr = now.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
+        
+        document.getElementById('clock').textContent = timeStr;
+        document.getElementById('date').textContent = dateStr;
+    }
+
+    setInterval(updateDateTime, 1000);
+    updateDateTime();
+
+    // Interaction handlers
+    window.addEventListener('click', (e) => {
+        const startMenu = document.getElementById('startMenu');
+        const startBtn = document.querySelector('.taskbar button');
+        if (!startMenu.contains(e.target) && !startBtn.contains(e.target)) {
+            startMenu.style.display = 'none';
+        }
+    });
+
+    // On Load
+    window.onload = () => {
+        // No auto-open for maximum privacy on load
+    };
+</script>
+
+</body>
+</html>
