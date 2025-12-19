@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="referrer" content="no-referrer">
-    <title>DinoOS-DesktopInterface</title>
+    <title>DinoOS|Desktop Interface</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
@@ -21,31 +21,33 @@
             height: 100vh;
             background-size: cover;
             background-position: center;
-            transition: background-image 0.5s ease-in-out;
-            background-image: url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&q=80&w=1920');
+            transition: background-image 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            background-image: url('https://images.unsplash.com/photo-1497215728101-856f4ea42174?q=80&w=1920&auto=format&fit=crop');
         }
 
         .window {
             position: absolute;
             min-width: 300px;
             min-height: 200px;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
             display: flex;
             flex-direction: column;
             overflow: hidden;
             z-index: 10;
+            border: 1px solid rgba(255,255,255,0.3);
         }
 
         .window-header {
-            background: #f3f4f6;
-            padding: 8px 12px;
+            background: rgba(243, 244, 246, 0.8);
+            padding: 10px 16px;
             cursor: move;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 1px solid #e5e7eb;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
             user-select: none;
         }
 
@@ -65,52 +67,53 @@
             position: absolute;
             bottom: 0;
             width: 100%;
-            height: 48px;
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(12px);
+            height: 52px;
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
             display: flex;
             align-items: center;
-            padding: 0 10px;
+            padding: 0 12px;
             z-index: 1000;
-            border-top: 1px solid rgba(255,255,255,0.4);
+            border-top: 1px solid rgba(255,255,255,0.3);
         }
 
         .start-menu {
             position: absolute;
-            bottom: 55px;
-            left: 10px;
-            width: 320px;
-            background: rgba(255, 255, 255, 0.98);
-            backdrop-filter: blur(25px);
-            border-radius: 12px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.25);
-            padding: 20px;
+            bottom: 60px;
+            left: 12px;
+            width: 360px;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(30px);
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            padding: 24px;
             display: none;
             z-index: 2000;
+            border: 1px solid rgba(255,255,255,0.5);
         }
 
         .desktop-icon {
-            width: 80px;
-            height: 95px;
+            width: 90px;
+            height: 100px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            margin: 10px;
+            margin: 12px;
             cursor: pointer;
-            border-radius: 10px;
+            border-radius: 12px;
             color: white;
-            text-shadow: 1px 1px 4px rgba(0,0,0,1);
-            transition: all 0.2s;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
         .desktop-icon:hover {
-            background: rgba(255,255,255,0.2);
-            transform: scale(1.05);
+            background: rgba(255,255,255,0.15);
+            transform: translateY(-5px);
         }
 
         .desktop-icon i {
-            font-size: 2.8rem;
+            font-size: 2.5rem;
             margin-bottom: 8px;
         }
 
@@ -120,44 +123,60 @@
 
         .active-window {
             z-index: 100 !important;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.4);
+        }
+
+        .preset-thumb {
+            aspect-ratio: 16/9;
+            border-radius: 8px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.2s;
+            object-fit: cover;
+            width: 100%;
+        }
+
+        .preset-thumb:hover {
+            transform: scale(1.05);
+            border-color: #3b82f6;
         }
     </style>
 </head>
 <body>
 
 <div id="desktop">
-    <!-- Desktop Icons -->
-    <div class="flex flex-col flex-wrap h-full p-6 content-start">
+    <!-- Ikon Desktop -->
+    <div class="flex flex-col flex-wrap h-[calc(100%-60px)] p-6 content-start">
         <div class="desktop-icon" onclick="openWindow('win-google', 'https://www.google.com/search?igu=1')">
             <i class="fab fa-google text-blue-400"></i>
-            <span class="text-xs font-bold">Google</span>
+            <span class="text-xs font-semibold">Google</span>
         </div>
         <div class="desktop-icon" onclick="openWindow('win-wikipedia', 'https://id.m.wikipedia.org')">
             <i class="fab fa-wikipedia-w text-white"></i>
-            <span class="text-xs font-bold">Wikipedia</span>
+            <span class="text-xs font-semibold">Wikipedia</span>
         </div>
         <div class="desktop-icon" onclick="openWindow('win-bing', 'https://www.bing.com')">
             <i class="fas fa-search text-green-400"></i>
-            <span class="text-xs font-bold">Bing</span>
+            <span class="text-xs font-semibold">Bing</span>
         </div>
         <div class="desktop-icon" onclick="openWindow('win-youtube', 'invidious.f5.si')">
             <i class="fab fa-youtube text-red-500"></i>
-            <span class="text-xs font-bold">YouTube</span>
+            <span class="text-xs font-semibold">YouTube</span>
         </div>
     </div>
 
-    <!-- Windows Container -->
+    <!-- Kontainer Jendela -->
     <div id="windows-container">
         <!-- Google Window -->
-        <div id="win-google" class="window hidden-window" style="width: 850px; height: 550px; top: 40px; left: 120px;">
+        <div id="win-google" class="window hidden-window" style="width: 900px; height: 600px; top: 40px; left: 120px;">
             <div class="window-header">
                 <div class="flex items-center gap-2">
                     <i class="fab fa-google text-blue-500"></i>
-                    <span class="text-sm font-semibold">Private Google Search</span>
+                    <span class="text-sm font-semibold">Google Search</span>
                 </div>
                 <div class="flex gap-2">
-                    <button onclick="closeWindow('win-google')" class="w-7 h-7 hover:bg-red-500 hover:text-white rounded-full flex items-center justify-center transition">
-                        <i class="fas fa-times text-xs"></i>
+                    <button onclick="closeWindow('win-google')" class="w-6 h-6 hover:bg-red-500 hover:text-white rounded-full flex items-center justify-center transition">
+                        <i class="fas fa-times text-[10px]"></i>
                     </button>
                 </div>
             </div>
@@ -170,12 +189,12 @@
         <div id="win-wikipedia" class="window hidden-window" style="width: 850px; height: 550px; top: 70px; left: 150px;">
             <div class="window-header">
                 <div class="flex items-center gap-2">
-                    <i class="fab fa-wikipedia-w"></i>
+                    <i class="fab fa-wikipedia-w text-gray-700"></i>
                     <span class="text-sm font-semibold">Wikipedia</span>
                 </div>
                 <div class="flex gap-2">
-                    <button onclick="closeWindow('win-wikipedia')" class="w-7 h-7 hover:bg-red-500 hover:text-white rounded-full flex items-center justify-center transition">
-                        <i class="fas fa-times text-xs"></i>
+                    <button onclick="closeWindow('win-wikipedia')" class="w-6 h-6 hover:bg-red-500 hover:text-white rounded-full flex items-center justify-center transition">
+                        <i class="fas fa-times text-[10px]"></i>
                     </button>
                 </div>
             </div>
@@ -185,15 +204,15 @@
         </div>
 
         <!-- Bing Window -->
-        <div id="win-bing" class="window hidden-window" style="width: 850px; height: 550px; top: 100px; left: 180px;">
+        <div id="win-bing" class="window hidden-window" style="width: 900px; height: 600px; top: 100px; left: 180px;">
             <div class="window-header">
                 <div class="flex items-center gap-2">
                     <i class="fas fa-search text-green-500"></i>
                     <span class="text-sm font-semibold">Bing Search</span>
                 </div>
                 <div class="flex gap-2">
-                    <button onclick="closeWindow('win-bing')" class="w-7 h-7 hover:bg-red-500 hover:text-white rounded-full flex items-center justify-center transition">
-                        <i class="fas fa-times text-xs"></i>
+                    <button onclick="closeWindow('win-bing')" class="w-6 h-6 hover:bg-red-500 hover:text-white rounded-full flex items-center justify-center transition">
+                        <i class="fas fa-times text-[10px]"></i>
                     </button>
                 </div>
             </div>
@@ -203,15 +222,15 @@
         </div>
 
         <!-- YouTube Window -->
-        <div id="win-youtube" class="window hidden-window" style="width: 850px; height: 550px; top: 130px; left: 210px;">
+        <div id="win-youtube" class="window hidden-window" style="width: 800px; height: 500px; top: 130px; left: 210px;">
             <div class="window-header">
                 <div class="flex items-center gap-2">
                     <i class="fab fa-youtube text-red-600"></i>
-                    <span class="text-sm font-semibold">YouTube Player</span>
+                    <span class="text-sm font-semibold">YouTube</span>
                 </div>
                 <div class="flex gap-2">
-                    <button onclick="closeWindow('win-youtube')" class="w-7 h-7 hover:bg-red-500 hover:text-white rounded-full flex items-center justify-center transition">
-                        <i class="fas fa-times text-xs"></i>
+                    <button onclick="closeWindow('win-youtube')" class="w-6 h-6 hover:bg-red-500 hover:text-white rounded-full flex items-center justify-center transition">
+                        <i class="fas fa-times text-[10px]"></i>
                     </button>
                 </div>
             </div>
@@ -221,66 +240,130 @@
         </div>
     </div>
 
-    <!-- Start Menu -->
+    <!-- Menu Mulai -->
     <div id="startMenu" class="start-menu">
-        <div class="flex items-center gap-3 mb-6 border-b pb-3">
-            <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center text-white">
-                <i class="fas fa-user"></i>
+        <div class="flex items-center gap-4 mb-6 border-b border-gray-100 pb-4">
+            <div class="w-12 h-12 bg-gradient-to-tr from-blue-600 to-indigo-400 rounded-full flex items-center justify-center text-white shadow-lg">
+                <i class="fas fa-user-shield text-xl"></i>
             </div>
-            <span class="font-bold text-gray-800">Administrator</span>
+            <div>
+                <span id="userNameDisplay" class="font-bold text-gray-800 text-lg block leading-tight">Administrator</span>
+                <span class="text-[10px] text-blue-500 font-bold uppercase tracking-widest">Sistem Aktif</span>
+            </div>
         </div>
         
-        <div class="space-y-4">
-            <p class="text-xs font-bold text-gray-400 uppercase tracking-wider">Kustomisasi Latar</p>
-            <div class="grid grid-cols-3 gap-2">
-                <img src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&q=80&w=200" class="cursor-pointer rounded-lg border-2 border-transparent hover:border-blue-500 h-14 w-full object-cover transition" onclick="setWallpaper(this.src)">
-                <img src="https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&q=80&w=200" class="cursor-pointer rounded-lg border-2 border-transparent hover:border-blue-500 h-14 w-full object-cover transition" onclick="setWallpaper(this.src)">
-                <img src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&q=80&w=200" class="cursor-pointer rounded-lg border-2 border-transparent hover:border-blue-500 h-14 w-full object-cover transition" onclick="setWallpaper(this.src)">
+        <div class="space-y-5">
+            <!-- Ganti Nama -->
+            <div class="flex flex-col gap-1.5">
+                <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Identitas Pengguna</label>
+                <div class="flex gap-2">
+                    <input type="text" id="nameInput" placeholder="Ketik nama Anda..." class="flex-grow text-sm border-0 bg-gray-50 rounded-xl px-4 py-2.5 outline-none focus:ring-2 focus:ring-blue-500/20 transition">
+                    <button onclick="updateName()" class="bg-blue-600 text-white text-xs px-4 py-2 rounded-xl hover:bg-blue-700 transition active:scale-95 shadow-md shadow-blue-200">Simpan</button>
+                </div>
             </div>
-            <div class="mt-6 pt-4 border-t border-gray-100 flex justify-end">
-                <button onclick="toggleStartMenu()" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg text-sm font-semibold transition">Tutup</button>
+
+            <!-- Wallpaper Preset (Koleksi Pilihan) -->
+            <div class="flex flex-col gap-2">
+                <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Koleksi Wallpaper Pilihan</label>
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="group relative">
+                        <img src="https://images.unsplash.com/photo-1497215728101-856f4ea42174?q=80&w=400&auto=format&fit=crop" 
+                             class="preset-thumb" title="Kantor Minimalis"
+                             onclick="setWallpaper('https://images.unsplash.com/photo-1497215728101-856f4ea42174?q=80&w=1920&auto=format&fit=crop')">
+                    </div>
+                    <div class="group relative">
+                        <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=400&auto=format&fit=crop" 
+                             class="preset-thumb" title="Retro Tech"
+                             onclick="setWallpaper('https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=1920&auto=format&fit=crop')">
+                    </div>
+                    <div class="group relative">
+                        <img src="https://images.unsplash.com/photo-1419242902214-272b3f66ee7a?q=80&w=400&auto=format&fit=crop" 
+                             class="preset-thumb" title="Galaksi"
+                             onclick="setWallpaper('https://images.unsplash.com/photo-1419242902214-272b3f66ee7a?q=80&w=1920&auto=format&fit=crop')">
+                    </div>
+                    <div class="group relative">
+                        <img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=400&auto=format&fit=crop" 
+                             class="preset-thumb" title="Arsitektur Modern"
+                             onclick="setWallpaper('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=1920&auto=format&fit=crop')">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Custom Link -->
+            <div class="flex flex-col gap-1.5">
+                <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Input URL Wallpaper</label>
+                <div class="flex gap-2">
+                    <input type="text" id="wallpaperInput" placeholder="https://..." class="flex-grow text-xs border-0 bg-gray-50 rounded-xl px-4 py-2 outline-none focus:ring-2 focus:ring-blue-500/20 transition">
+                    <button onclick="setCustomWallpaper()" class="bg-gray-800 text-white text-xs px-3 py-2 rounded-xl hover:bg-black transition">Terapkan</button>
+                </div>
+            </div>
+            
+            <div class="mt-4 pt-4 border-t border-gray-100 flex justify-between items-center">
+                <span class="text-[9px] text-gray-400 font-bold tracking-widest uppercase">DinoOS Edition</span>
+                <button onclick="toggleStartMenu()" class="text-gray-400 hover:text-gray-800 transition"><i class="fas fa-chevron-down"></i></button>
             </div>
         </div>
     </div>
 
     <!-- Taskbar -->
     <div class="taskbar">
-        <button onclick="toggleStartMenu()" class="w-10 h-10 flex items-center justify-center hover:bg-blue-100 rounded-lg mr-4 transition group">
-            <i class="fab fa-windows text-blue-600 text-xl group-hover:scale-110 transition"></i>
+        <button onclick="toggleStartMenu()" class="w-10 h-10 flex items-center justify-center hover:bg-white/50 rounded-xl mr-4 transition-all duration-300 group">
+            <i class="fab fa-windows text-blue-600 text-2xl group-hover:scale-110 transition"></i>
         </button>
         
-        <div id="taskbar-apps" class="flex gap-2 flex-grow">
-            <!-- App activity indicators could go here -->
-        </div>
+        <div id="taskbar-apps" class="flex gap-3 flex-grow"></div>
 
-        <div class="flex flex-col items-end text-xs font-bold text-gray-600 px-4 border-l border-gray-300 ml-2">
-            <div id="clock">00:00:00</div>
-            <div id="date" class="text-[10px] text-gray-400">...</div>
+        <div class="flex items-center gap-4 px-4 border-l border-gray-200/50 ml-2">
+            <div class="flex flex-col items-end">
+                <div id="clock" class="text-sm font-bold text-gray-700 leading-none">00:00</div>
+                <div id="date" class="text-[9px] text-gray-500 font-medium">Memuat...</div>
+            </div>
+            <i class="fas fa-wifi text-xs text-gray-400"></i>
         </div>
     </div>
 </div>
 
 <script>
-    // Window Management
+    // --- MANAJEMEN DATA ---
+    function updateName() {
+        const input = document.getElementById('nameInput');
+        const display = document.getElementById('userNameDisplay');
+        const val = input.value.trim();
+        if (val) {
+            display.textContent = val;
+            localStorage.setItem('private_os_user', val);
+            input.value = "";
+        }
+    }
+
+    function setWallpaper(url) {
+        if (!url) return;
+        const desktop = document.getElementById('desktop');
+        desktop.style.backgroundImage = `url('${url}')`;
+        localStorage.setItem('private_os_wp', url);
+    }
+
+    function setCustomWallpaper() {
+        const input = document.getElementById('wallpaperInput');
+        const url = input.value.trim();
+        if (url) {
+            setWallpaper(url);
+            input.value = "";
+        }
+    }
+
+    // --- MANAJEMEN WINDOWS ---
     function openWindow(id, url) {
         const win = document.getElementById(id);
         const iframe = document.getElementById('iframe-' + id);
-        
-        // Only load URL if iframe is empty to prevent history stack buildup in the host
-        if (!iframe.src || iframe.src === 'about:blank') {
-            iframe.src = url;
-        }
-        
+        if (!iframe.src || iframe.src === 'about:blank') iframe.src = url;
         win.classList.remove('hidden-window');
         focusWindow(id);
     }
 
     function closeWindow(id) {
         const win = document.getElementById(id);
-        const iframe = document.getElementById('iframe-' + id);
-        
-        // Clear iframe source on close to stop tracking and clear memory
-        iframe.src = 'about:blank';
+        document.getElementById('iframe-' + id).src = 'about:blank';
         win.classList.add('hidden-window');
     }
 
@@ -300,17 +383,10 @@
             focusWindow(win.id);
             offset.x = e.clientX - win.offsetLeft;
             offset.y = e.clientY - win.offsetTop;
-            win.style.transition = 'none';
             
-            // Add transparent overlay over iframe while dragging to prevent mouse events loss
             const overlay = document.createElement('div');
-            overlay.id = 'drag-overlay';
-            overlay.style.position = 'absolute';
-            overlay.style.top = '0';
-            overlay.style.left = '0';
-            overlay.style.width = '100%';
-            overlay.style.height = '100%';
-            overlay.style.zIndex = '1000';
+            overlay.id = 'drag-lock';
+            overlay.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;z-index:9999;';
             win.querySelector('.window-content').appendChild(overlay);
         });
 
@@ -322,48 +398,37 @@
 
         document.addEventListener('mouseup', () => {
             isDragging = false;
-            const overlay = document.getElementById('drag-overlay');
-            if (overlay) overlay.remove();
+            const lock = document.getElementById('drag-lock');
+            if (lock) lock.remove();
         });
     });
 
-    // Start Menu
+    // --- UTILITIES ---
     function toggleStartMenu() {
-        const menu = document.getElementById('startMenu');
-        menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';
+        const m = document.getElementById('startMenu');
+        m.style.display = (m.style.display === 'block') ? 'none' : 'block';
     }
 
-    // Wallpaper
-    function setWallpaper(url) {
-        const highResUrl = url.split('&w=200')[0] + '&w=1920';
-        document.getElementById('desktop').style.backgroundImage = `url('${highResUrl}')`;
-    }
-
-    // Clock and Date
-    function updateDateTime() {
+    function clockUpdate() {
         const now = new Date();
-        const timeStr = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-        const dateStr = now.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
-        
-        document.getElementById('clock').textContent = timeStr;
-        document.getElementById('date').textContent = dateStr;
+        document.getElementById('clock').textContent = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+        document.getElementById('date').textContent = now.toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
     }
 
-    setInterval(updateDateTime, 1000);
-    updateDateTime();
-
-    // Interaction handlers
     window.addEventListener('click', (e) => {
-        const startMenu = document.getElementById('startMenu');
-        const startBtn = document.querySelector('.taskbar button');
-        if (!startMenu.contains(e.target) && !startBtn.contains(e.target)) {
-            startMenu.style.display = 'none';
-        }
+        const m = document.getElementById('startMenu');
+        const b = document.querySelector('.taskbar button');
+        if (m.style.display === 'block' && !m.contains(e.target) && !b.contains(e.target)) m.style.display = 'none';
     });
 
-    // On Load
     window.onload = () => {
-        // No auto-open for maximum privacy on load
+        const n = localStorage.getItem('private_os_user');
+        if (n) document.getElementById('userNameDisplay').textContent = n;
+        const w = localStorage.getItem('private_os_wp');
+        if (w) document.getElementById('desktop').style.backgroundImage = `url('${w}')`;
+        
+        setInterval(clockUpdate, 1000);
+        clockUpdate();
     };
 </script>
 
